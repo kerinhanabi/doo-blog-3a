@@ -1,73 +1,27 @@
 <template>
   <div class="home">
-      <h1>Home</h1>
-
-      <!-- case 3: what if to search & filter a name from the names below -->
-      <input type="text" v-model="search">
-      <p>search term - {{ search }}</p>
-      <!-- case 2 output -->
-       <div v-for="name in matchingNames" :key="name">{{ name }}</div>
-
-      <!-- case 6 & 7 -->
-       <button @click="handleClick">stop watching</button>
-
-
-      <!-- case 1 output -->
-      <!--p>{{ name }}</p-->
-
+    <h1>Home</h1>
+    <PostList v-if="showPosts"  :posts="posts" />
+    <button @click="showPosts = !showPosts">toggle posts</button>
+    <button @click="posts.pop()">delete a post</button>
   </div>
 </template>
 
 <script>
-import { computed, ref, watch, watchEffect } from 'vue';
+import PostList from '../components/PostList.vue'
+import { ref } from 'vue';
 
 export default {
   name: 'Home',
-
+  components: { PostList },
   setup() {
-    // case 3 to search & filter name from name array below
-    const search = ref('')
+    const posts = ref([
+      {title: 'welcome to the blog', body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse nibh libero, facilisis eget convallis vitae, viverra et diam. Quisque commodo nisi non quam commodo, sed euismod mi feugiat. Nulla in consectetur dolor. Aliquam porta et magna eu consectetur. Praesent vitae efficitur quam. Suspendisse a ornare lacus. Praesent purus velit, sollicitudin sed consequat eget, porttitor id nisi. Phasellus gravida tellus mauris, sit amet pretium sem convallis eu.', id: 1},
+      {title: 'top 5 css tips', body: 'lorem ipsum', id: 2},
+    ])
+    const showPosts = ref(true)
 
-    // case 2
-    const names = ref(['mario','yoshi','luigi','toad', 'bowser', 'kooga','peach'])
-
-    // case 4 use this Watch function without wantiing to use the value in it
-    // watch(search, () => {
-    //   console.log('watch function ran')
-    // })
-
-    //case 5 watchEffect function if want use value inside the function 
-    // watchEffect(() => {
-    //   console.log('watchEffect function ran', search.value)
-    // })
-
-    // case 6 to stop watch function
-    const stopWatch = watch(search, () => {
-      console.log('watch function ran')
-    })
-
-    // case 7 stop watchEffect function
-    const stopEffect = watchEffect(() => {
-      console.log('watchEffect function ran', search.value)
-    })
-
-    // case 3 to search & filter name from name array
-    const matchingNames = computed(() => {
-      return names.value.filter((name) => name.includes(search.value))
-    })
-
-    const handleClick = () => {
-      stopWatch()
-      stopEffect()
-    }
-
-    return { names, search, matchingNames, handleClick }
-          // case 1 
-          // const name = computed(() => {
-          //   return 'shaun'
-          // })
-          
-          // return { name }
+    return { posts, showPosts }
   }
 }
 </script>
